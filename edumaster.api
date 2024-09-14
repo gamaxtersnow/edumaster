@@ -1,0 +1,834 @@
+syntax = "v1"
+
+type (
+	StudentAddReq {
+		Name           string `json:"name"` // 姓名
+		Gender         int64  `json:"gender"` // 性别（男/女）
+		DateOfBirth    int64  `json:"date_of_birth"` // 出生日期（Unix时间戳）
+		City           string `json:"city"` // 所在城市
+		PhoneNumber    string `json:"phone_number"` // 手机号
+		Major          string `json:"major"` // 专业
+		WechatId       string `json:"wechat_id"` // 微信号
+		WechatNickname string `json:"wechat_nickname"` // 微信昵称
+		School         string `json:"school"` // 学校
+		Grade          string `json:"grade"` // 年级
+		// 联系人信息
+		Contacts []Contact `json:"contacts"` // 主要联系人信息
+		// 学生属性
+		StudentType int64 `json:"student_type"` // 学生属性（新生/老生）
+		// 学习目标
+		// 学习目标
+		LearningGoals []LearningGoal `json:"learning_goals"` // 学生目标列表
+		Notes         string         `json:"notes"` // 备注
+		// 账号信息
+		AccountType   int64  `json:"account_type"` // 账号类型（VIP/非VIP）
+		LoginPassword string `json:"login_password"` // 登录密码
+		Subscription  string `json:"subscription"` // 套餐选择（例如："12个月/剩余数量: 10"）
+		// 家长账号
+		ParentAccounts []ParentAccount `json:"parent_accounts"` // 家长账号信息
+		// 时间戳
+		CreatedAt int64 `json:"created_at"` // 创建时间（Unix时间戳）
+		UpdatedAt int64 `json:"updated_at"` // 更新时间（Unix时间戳）
+	}
+	// Contact 表示联系人信息
+	Contact {
+		PhoneNumber  string `json:"phone_number"` // 联系人手机号
+		Type         int64  `json:"type"` // 联系人类型
+		Relationship string `json:"relationship"` // 与学生的关系
+		Name         string `json:"name"` // 联系人姓名
+		WechatId     string `json:"wechat_id"` // 联系人微信号
+	}
+	// ParentAccount 表示家长账号信息
+	ParentAccount {
+		Name          string `json:"name"` // 家长姓名
+		Relationship  string `json:"relationship"` // 与学生的关系
+		PhoneNumber   string `json:"phone_number"` // 家长手机号
+		LoginPassword string `json:"login_password"` // 家长登录密码
+	}
+	// LearningGoal 表示学习目标
+	LearningGoal {
+		TargetScore   float64 `json:"target_score"` // 目标分数
+		EntryScore    float64 `json:"entry_score"` // 入学分数
+		TargetCourse  string  `json:"target_course"` // 咨询课程
+		TargetCountry string  `json:"target_country"` // 目标国家
+	}
+	StudentAddResp  {}
+	StudentModifyReq  {}
+	StudentModifyResp  {}
+	StudentStopReq  {}
+	StudentStopResp  {}
+	StudentDeleteReq  {}
+	StudentDeleteResp  {}
+	StudentInfoReq  {}
+	StudentInfoResp  {}
+	StudentListReq  {}
+	StudentListResp  {}
+	StudentenrollmentsituationReq  {}
+	StudentEnrollmentSituationResp  {}
+)
+
+//教务中心页面
+//学员管理
+@server (
+	prefix: /v1
+	group:  student
+)
+service edumaster-api {
+	//添加学生
+	@handler Add
+	post /student/add (StudentAddReq) returns (StudentAddResp)
+
+	//修改学生
+	@handler Modify
+	post /student/modify (StudentModifyReq) returns (StudentModifyResp)
+
+	//停用学生
+	@handler Stop
+	post /student/stop (StudentStopReq) returns (StudentStopResp)
+
+	//删除学员
+	@handler Delete
+	post /student/delete (StudentDeleteReq) returns (StudentDeleteResp)
+
+	//查询学员
+	@handler Info
+	post /student/info (StudentInfoReq) returns (StudentInfoResp)
+
+	//学员列表
+	@handler List
+	post /student/list (StudentListReq) returns (StudentListResp)
+
+	//报读情况
+	@handler studentenrollmentsituation
+	post /student/enrollment/situation (StudentenrollmentsituationReq) returns (StudentEnrollmentSituationResp)
+}
+
+//客户管理
+type (
+	CustomerAddReq  {}
+	CustomerAddResp  {}
+	CustomerModifyReq  {}
+	CustomerModifyResp  {}
+	CustomerStopReq  {}
+	CustomerStopResp  {}
+	CustomerDeleteReq  {}
+	CustomerDeleteResp  {}
+	CustomerInfoReq  {}
+	CustomerInfoResp  {}
+	CustomerListReq  {}
+	CustomerListResp  {}
+)
+
+@server (
+	prefix: /v1
+	group:  customer
+)
+service edumaster-api {
+	//添加客户
+	@handler Add
+	post /customer/add (CustomerAddReq) returns (CustomerAddResp)
+
+	//修改客户
+	@handler Modify
+	post /customer/modify (CustomerModifyReq) returns (CustomerModifyResp)
+
+	//停用客户
+	@handler Stop
+	post /customer/stop (CustomerStopReq) returns (CustomerStopResp)
+
+	//删除客户
+	@handler Delete
+	post /customer/delete (CustomerDeleteReq) returns (CustomerDeleteResp)
+
+	//查询客户
+	@handler Info
+	post /customer/info (CustomerInfoReq) returns (CustomerInfoResp)
+
+	//客户列表
+	@handler List
+	post /customer/list (CustomerListReq) returns (CustomerListResp)
+}
+
+//客户关系
+type (
+	CustomerRelationshipAddReq  {}
+	CustomerRelationshipAddResp  {}
+	CustomerRelationshipModifyReq  {}
+	CustomerRelationshipModifyResp  {}
+	CustomerRelationshipDeleteReq  {}
+	CustomerRelationshipDeleteResp  {}
+	CustomerRelationshipInfoReq  {}
+	CustomerRelationshipInfoResp  {}
+	CustomerRelationshipListReq  {}
+	CustomerRelationshipListResp  {}
+)
+
+@server (
+	prefix: /v1
+	group:  customerrelationship
+)
+service edumaster-api {
+	//添加客户关系
+	@handler Add
+	post /customer/relationship/add (CustomerRelationshipAddReq) returns (CustomerRelationshipAddResp)
+
+	//修改客户关系
+	@handler Modify
+	post /customer/relationship/modify (CustomerRelationshipModifyReq) returns (CustomerRelationshipModifyResp)
+
+	//删除客户关系
+	@handler Delete
+	post /customer/relationship/delete (CustomerRelationshipDeleteReq) returns (CustomerRelationshipDeleteResp)
+
+	//查询客户关系
+	@handler Info
+	post /customer/relationship/info (CustomerRelationshipInfoReq) returns (CustomerRelationshipInfoResp)
+
+	//客户关系列表
+	@handler List
+	post /customer/relationship/list (CustomerRelationshipListReq) returns (CustomerRelationshipListResp)
+}
+
+//客户关系组
+type (
+	CustomerRelationshipGroupAddReq  {}
+	CustomerRelationshipGroupAddResp  {}
+	CustomerRelationshipGroupModifyReq  {}
+	CustomerRelationshipGroupModifyResp  {}
+	CustomerRelationshipGroupDeleteReq  {}
+	CustomerRelationshipGroupDeleteResp  {}
+	CustomerRelationshipGroupInfoReq  {}
+	CustomerRelationshipGroupInfoResp  {}
+	CustomerRelationshipGroupListReq  {}
+	CustomerRelationshipGroupListResp  {}
+)
+
+@server (
+	prefix: /v1
+	group:  customerrelationshipgroup
+)
+service edumaster-api {
+	//添加客户关系组
+	@handler Add
+	post /customer/relationship/group/add (CustomerRelationshipGroupAddReq) returns (CustomerRelationshipGroupAddResp)
+
+	//修改客户关系组
+	@handler Modify
+	post /customer/relationship/group/modify (CustomerRelationshipGroupModifyReq) returns (CustomerRelationshipGroupModifyResp)
+
+	//删除客户关系组
+	@handler Delete
+	post /customer/relationship/group/delete (CustomerRelationshipGroupDeleteReq) returns (CustomerRelationshipGroupDeleteResp)
+
+	//查询客户关系组
+	@handler Info
+	post /customer/relationship/group/info (CustomerRelationshipGroupInfoReq) returns (CustomerRelationshipGroupInfoResp)
+
+	//客户关系组列表
+	@handler List
+	post /customer/relationship/group/list (CustomerRelationshipGroupListReq) returns (CustomerRelationshipGroupListResp)
+}
+
+//老师管理
+type (
+	TeacherAddReq  {}
+	TeacherAddResp  {}
+	TeacherModifyReq  {}
+	TeacherModifyResp  {}
+	TeacherStopReq  {}
+	TeacherStopResp  {}
+	TeacherDeleteReq  {}
+	TeacherDeleteResp  {}
+	TeacherInfoReq  {}
+	TeacherInfoResp  {}
+	TeacherListReq  {}
+	TeacherListResp  {}
+	TeacherenrollmentsituationReq  {}
+	TeacherEnrollmentSituationResp  {}
+)
+
+@server (
+	prefix: /v1
+	group:  teacher
+)
+service edumaster-api {
+	//添加教师
+	@handler Add
+	post /teacher/add (TeacherAddReq) returns (TeacherAddResp)
+
+	//修改教师
+	@handler Modify
+	post /teacher/modify (TeacherModifyReq) returns (TeacherModifyResp)
+
+	//停用教师
+	@handler Stop
+	post /teacher/stop (TeacherStopReq) returns (TeacherStopResp)
+
+	//删除教师
+	@handler Delete
+	post /teacher/delete (TeacherDeleteReq) returns (TeacherDeleteResp)
+
+	//查询教室
+	@handler Info
+	post /teacher/info (TeacherInfoReq) returns (TeacherInfoResp)
+
+	//教师列表
+	@handler List
+	post /teacher/list (TeacherListReq) returns (TeacherListResp)
+}
+
+//班级管理
+type (
+	ClassAddReq {
+		ID             int64   `json:"id"` // 班级ID
+		CampusID       int64   `json:"campus_id"` // 校区ID
+		CourseID       int64   `json:"course_id"` // 课程ID
+		ClassType      string  `json:"class_type"` // 班级类型
+		TeacherIDs     []int64 `json:"teacher_ids"` // 教师ID列表
+		AssistantIDs   []int64 `json:"assistant_ids"` // 助教ID列表
+		StartDate      int64   `json:"start_date"` // 开课时间
+		ClassTime      string  `json:"class_time"` // 节课时间
+		CourseDuration int32   `json:"course_duration"` // 课程总课时
+		ClassDuration  int32   `json:"class_duration"` // 班级课时
+		Schedule       string  `json:"schedule"` // 上课时间安排
+		Status         string  `json:"status"` // 班级状态
+		Notes          string  `json:"notes"` // 备注
+		CreatedAt      int64   `json:"created_at"` // 创建时间
+		UpdatedAt      int64   `json:"updated_at"` // 更新时间
+	}
+	ClassAddResp  {}
+	ClassModifyReq  {}
+	ClassModifyResp  {}
+	ClassStopReq  {}
+	ClassStopResp  {}
+	ClassDeleteReq  {}
+	ClassDeleteResp  {}
+	ClassInfoReq  {}
+	ClassInfoResp  {}
+	ClassListReq  {}
+	ClassListResp  {}
+)
+
+@server (
+	prefix: /v1
+	group:  class
+)
+service edumaster-api {
+	//添加班级
+	@handler Add
+	post /class/add (ClassAddReq) returns (ClassAddResp)
+
+	//修改班级
+	@handler Modify
+	post /class/modify (ClassModifyReq) returns (ClassModifyResp)
+
+	//停用班级
+	@handler ClassStop
+	post /class/stop (ClassStopReq) returns (ClassStopResp)
+
+	//删除班级
+	@handler Delete
+	post /class/delete (ClassDeleteReq) returns (ClassDeleteResp)
+
+	//查询班级
+	@handler Info
+	post /class/info (ClassInfoReq) returns (ClassInfoResp)
+
+	//班级列表
+	@handler List
+	post /class/list (ClassListReq) returns (ClassListResp)
+}
+
+//课表管理
+//班级课表
+type (
+	ClassScheduleAddReq {
+		ID             int64  `json:"id"` // 班级ID（假设有一个唯一标识符）
+		Name           string `json:"name"` // 班级名称
+		Status         string `json:"status"` // 状态（如"未上课"）
+		CourseCategory string `json:"course_category"` // 课程类别
+		StartTime      int64  `json:"start_time"` // 上课时间（Unix时间戳）
+		Duration       string `json:"duration"` // 上课时长
+		Content        string `json:"content"` // 上课内容
+		Teacher        string `json:"teacher"` // 上课老师
+		TeachingMethod string `json:"teaching_method"` // 上课方式（如"线下"）
+		Location       string `json:"location"` // 上课地址
+		AttendanceRate string `json:"attendance_rate"` // 出勤率
+		CourseType     string `json:"course_type"` // 课程类型
+		StudentCount   int    `json:"student_count"` // 本班人数
+		Notes          string `json:"notes"` // 备注
+		CreatedAt      int64  `json:"created_at"` // 创建时间（Unix时间戳）
+		UpdatedAt      int64  `json:"updated_at"` // 更新时间（Unix时间戳）
+	}
+	ClassScheduleAddResp  {}
+	ClassScheduleModifyReq  {}
+	ClassScheduleModifyResp  {}
+	ClassScheduleStopReq  {}
+	ClassScheduleStopResp  {}
+	ClassScheduleDeleteReq  {}
+	ClassScheduleDeleteResp  {}
+	ClassScheduleInfoReq  {}
+	ClassScheduleInfoResp  {}
+	ClassScheduleListReq  {}
+	ClassScheduleListResp  {}
+)
+
+@server (
+	prefix: /v1
+	group:  classschedule
+)
+service edumaster-api {
+	//添加班级课表
+	@handler Add
+	post /classschedule/add (ClassScheduleAddReq) returns (ClassScheduleAddResp)
+
+	//修改班级课表
+	@handler Modify
+	post /classschedule/modify (ClassScheduleModifyReq) returns (ClassScheduleModifyResp)
+
+	//停用班级课表
+	@handler Stop
+	post /classschedule/stop (ClassScheduleStopReq) returns (ClassScheduleStopResp)
+
+	//删除班级课表
+	@handler Delete
+	post /classschedule/delete (ClassScheduleDeleteReq) returns (ClassScheduleDeleteResp)
+
+	//查询班级课表
+	@handler Info
+	post /classschedule/info (ClassScheduleInfoReq) returns (ClassScheduleInfoResp)
+
+	//班级课表列表
+	@handler List
+	post /classschedule/list (ClassScheduleListReq) returns (ClassScheduleListResp)
+}
+
+//学生课表
+type (
+	StudentScheduleAddReq  {}
+	StudentScheduleAddResp  {}
+	StudentScheduleModifyReq  {}
+	StudentScheduleModifyResp  {}
+	StudentScheduleStopReq  {}
+	StudentScheduleStopResp  {}
+	StudentScheduleDeleteReq  {}
+	StudentScheduleDeleteResp  {}
+	StudentScheduleInfoReq  {}
+	StudentScheduleInfoResp  {}
+	StudentScheduleListReq  {}
+	StudentScheduleListResp  {}
+)
+
+@server (
+	prefix: /v1
+	group:  studentschedule
+)
+service edumaster-api {
+	//添加学生课表
+	@handler Add
+	post /studentschedule/add (StudentScheduleAddReq) returns (StudentScheduleAddResp)
+
+	//修改学生课表
+	@handler Modify
+	post /studentschedule/modify (StudentScheduleModifyReq) returns (StudentScheduleModifyResp)
+
+	//停用学生课表
+	@handler Stop
+	post /studentschedule/stop (StudentScheduleStopReq) returns (StudentScheduleStopResp)
+
+	//删除学生课表
+	@handler Delete
+	post /studentschedule/delete (StudentScheduleDeleteReq) returns (StudentScheduleDeleteResp)
+
+	//查询学生课表
+	@handler Info
+	post /studentschedule/info (StudentScheduleInfoReq) returns (StudentScheduleInfoResp)
+
+	//学生课表列表
+	@handler List
+	post /studentschedule/list (StudentScheduleListReq) returns (StudentScheduleListResp)
+}
+
+//老师课表
+type (
+	TeacherScheduleAddReq  {}
+	TeacherScheduleAddResp  {}
+	TeacherScheduleModifyReq  {}
+	TeacherScheduleModifyResp  {}
+	TeacherScheduleStopReq  {}
+	TeacherScheduleStopResp  {}
+	TeacherScheduleDeleteReq  {}
+	TeacherScheduleDeleteResp  {}
+	TeacherScheduleInfoReq  {}
+	TeacherScheduleInfoResp  {}
+	TeacherScheduleListReq  {}
+	TeacherScheduleListResp  {}
+)
+
+@server (
+	prefix: /v1
+	group:  teacherschedule
+)
+service edumaster-api {
+	//添加班级
+	@handler Add
+	post /teacherschedule/add (TeacherScheduleAddReq) returns (TeacherScheduleAddResp)
+
+	//修改班级
+	@handler Modify
+	post /teacherschedule/modify (TeacherScheduleModifyReq) returns (TeacherScheduleModifyResp)
+
+	//停用班级
+	@handler Stop
+	post /teacherschedule/stop (TeacherScheduleStopReq) returns (TeacherScheduleStopResp)
+
+	//删除班级
+	@handler Delete
+	post /teacherschedule/delete (TeacherScheduleDeleteReq) returns (TeacherScheduleDeleteResp)
+
+	//查询班级
+	@handler Info
+	post /teacherschedule/info (TeacherScheduleInfoReq) returns (TeacherScheduleInfoResp)
+
+	//班级列表
+	@handler List
+	post /teacherschedule/list (TeacherScheduleListReq) returns (TeacherScheduleListResp)
+}
+
+//时间课表
+type (
+	TimeScheduleAddReq  {}
+	TimeScheduleAddResp  {}
+	TimeScheduleModifyReq  {}
+	TimeScheduleModifyResp  {}
+	TimeScheduleStopReq  {}
+	TimeScheduleStopResp  {}
+	TimeScheduleDeleteReq  {}
+	TimeScheduleDeleteResp  {}
+	TimeScheduleInfoReq  {}
+	TimeScheduleInfoResp  {}
+	TimeScheduleListReq  {}
+	TimeScheduleListResp  {}
+)
+
+@server (
+	prefix: /v1
+	group:  timeschedule
+)
+service edumaster-api {
+	//添加时间课表
+	@handler Add
+	post /timeschedule/add (TimeScheduleAddReq) returns (TimeScheduleAddResp)
+
+	//修改时间课表
+	@handler Modify
+	post /timeschedule/modify (TimeScheduleModifyReq) returns (TimeScheduleModifyResp)
+
+	//停用时间课表
+	@handler Stop
+	post /timeschedule/stop (TimeScheduleStopReq) returns (TimeScheduleStopResp)
+
+	//删除时间课表
+	@handler Delete
+	post /timeschedule/delete (TimeScheduleDeleteReq) returns (TimeScheduleDeleteResp)
+
+	//查询时间课表
+	@handler Info
+	post /timeschedule/info (TimeScheduleInfoReq) returns (TimeScheduleInfoResp)
+
+	//时间课程列表
+	@handler List
+	post /timeschedule/list (TimeScheduleListReq) returns (TimeScheduleListResp)
+}
+
+//上课记录
+//点名记录
+type (
+	ClassAttendanceRecordAddReq  {}
+	ClassAttendanceRecordAddResp  {}
+	ClassAttendanceRecordModifyReq  {}
+	ClassAttendanceRecordModifyResp  {}
+	ClassAttendanceRecordDeleteReq  {}
+	ClassAttendanceRecordDeleteResp  {}
+	ClassAttendanceRecordInfoReq  {}
+	ClassAttendanceRecordInfoResp  {}
+	ClassAttendanceRecordListReq  {}
+	ClassAttendanceRecordListResp  {}
+)
+
+@server (
+	prefix: /v1
+	group:  classattendancerecord
+)
+service edumaster-api {
+	//添加班级点名记录
+	@handler Add
+	post /class/attendance/record/add (ClassAttendanceRecordAddReq) returns (ClassAttendanceRecordAddResp)
+
+	//修改班级点名记录
+	@handler Modify
+	post /class/attendance/record/modify (ClassAttendanceRecordModifyReq) returns (ClassAttendanceRecordModifyResp)
+
+	//删除班级点名记录
+	@handler Delete
+	post /class/attendance/record/delete (ClassAttendanceRecordDeleteReq) returns (ClassAttendanceRecordDeleteResp)
+
+	//查询班级点名记录
+	@handler Info
+	post /class/attendance/record/info (ClassAttendanceRecordInfoReq) returns (ClassAttendanceRecordInfoResp)
+
+	//点名记录列表
+	@handler List
+	post /class/attendance/record/list (ClassAttendanceRecordListReq) returns (ClassAttendanceRecordListResp)
+}
+
+//超时未点列表
+type (
+	ClassAttendanceRecordTimeoutListReq  {}
+	ClassAttendanceRecordTimeoutListResp  {}
+)
+
+@server (
+	prefix: /v1
+	group:  classattendancerecordtimeout
+)
+service edumaster-api {
+	@handler List
+	post /class/attendance/record/timeout/list (ClassAttendanceRecordTimeoutListReq) returns (ClassAttendanceRecordTimeoutListResp)
+}
+
+//缺课提醒
+type (
+	ClassAbsenceNotificationListReq  {}
+	ClassAbsenceNotificationListResp  {}
+)
+
+@server (
+	prefix: /v1
+	group:  classabsencenotification
+)
+service edumaster-api {
+	@handler List
+	post /class/absence/notification/list (ClassAbsenceNotificationListReq) returns (ClassAbsenceNotificationListResp)
+}
+
+//请假申请
+type (
+	leaveapplicationListReq  {}
+	leaveapplicationListResp  {}
+)
+
+@server (
+	prefix: /v1
+	group:  leaveapplication
+)
+service edumaster-api {
+	@handler List
+	post /leave/application/list (leaveapplicationListReq) returns (leaveapplicationListResp)
+}
+
+//课程管理
+type (
+	CourseAddReq {
+		OrderNumber       string  `json:"order_number"` //订单id
+		CourseName        string  `json:"course_name"` //课程名称
+		CourseDescription string  `json:"course_description"` //课程描述
+		Source            string  `json:"source"` //课程来源
+		CreatedAt         int64   `json:"created_at"` //创建时间
+		UpdatedAt         int64   `json:"updated_at"` //更新时间
+		Status            string  `json:"status"` //课程状态值
+		TotalAmount       float64 `json:"total_amount"` //总价
+		CourseHours       int32   `json:"course_hours"` //课程时长
+		CustomerID        int64   `json:"customer_id"` //客户id
+		ValidFrom         int64   `json:"valid_from"` //有效期开始时间
+		ValidUntil        int64   `json:"valid_until"` //有效期结束时间
+		IsSpecialClass    bool    `json:"is_special_class"` //是否为专班课程
+		SpecialClassID    int64   `json:"special_class_id"` //特殊课程id
+		SourceOrderID     int64   `json:"source_order_id"` //源订单id
+	}
+	CourseAddResp  {}
+	CourseModifyReq {
+		Name         string   `json:"name"` // 课程名称
+		Category     string   `json:"category"` // 课程类别
+		QuestionBank string   `json:"question_bank"` // 关联题库
+		Type         string   `json:"type"` // 课程类型（班课/定制课）
+		Price        float64  `json:"price"` // 课程价格
+		Duration     float64  `json:"duration"` // 课时（小时）
+		HourlyRate   float64  `json:"hourly_rate"` // 课时单价
+		Contents     []string `json:"contents"` // 上课内容
+		Description  string   `json:"description"` // 课程介绍
+		CreatedAt    int64    `json:"created_at"` // 创建时间（Unix时间戳）
+		UpdatedAt    int64    `json:"updated_at"` // 更新时间（Unix时间戳）
+	}
+	CourseModifyResp  {}
+	CourseStopReq  {}
+	CourseStopResp  {}
+	CourseDeleteReq  {}
+	CourseDeleteResp  {}
+	CourseInfoReq  {}
+	CourseInfoResp  {}
+	CourseListReq  {}
+	CourseListResp  {}
+	CourseenrollmentsituationReq  {}
+	CourseEnrollmentSituationResp  {}
+)
+
+@server (
+	prefix: /v1
+	group:  course
+)
+service edumaster-api {
+	//添加课程
+	@handler Add
+	post /course/add (CourseAddReq) returns (CourseAddResp)
+
+	//修改课程
+	@handler Modify
+	post /course/modify (CourseModifyReq) returns (CourseModifyResp)
+
+	//停用课程
+	@handler Stop
+	post /course/stop (CourseStopReq) returns (CourseStopResp)
+
+	//删除课程
+	@handler Delete
+	post /course/delete (CourseDeleteReq) returns (CourseDeleteResp)
+
+	//查询课程
+	@handler Info
+	post /course/info (CourseInfoReq) returns (CourseInfoResp)
+
+	//课程列表
+	@handler List
+	post /course/list (CourseListReq) returns (CourseListResp)
+}
+
+//通知管理
+type (
+	notificationAddReq  {}
+	notificationAddResp  {}
+	notificationModifyReq  {}
+	notificationModifyResp  {}
+	notificationStopReq  {}
+	notificationStopResp  {}
+	notificationDeleteReq  {}
+	notificationDeleteResp  {}
+	notificationInfoReq  {}
+	notificationInfoResp  {}
+	notificationListReq  {}
+	notificationListResp  {}
+	notificationenrollmentsituationReq  {}
+	notificationEnrollmentSituationResp  {}
+)
+
+@server (
+	prefix: /v1
+	group:  notification
+)
+service edumaster-api {
+	//添加通知
+	@handler Add
+	post /notification/add (notificationAddReq) returns (notificationAddResp)
+
+	//修改通知
+	@handler Modify
+	post /notification/modify (notificationModifyReq) returns (notificationModifyResp)
+
+	//停用通知
+	@handler Stop
+	post /notification/stop (notificationStopReq) returns (notificationStopResp)
+
+	//删除通知
+	@handler Delete
+	post /notification/delete (notificationDeleteReq) returns (notificationDeleteResp)
+
+	//查询通知
+	@handler Info
+	post /notification/info (notificationInfoReq) returns (notificationInfoResp)
+
+	//通知列表
+	@handler List
+	post /notification/list (notificationListReq) returns (notificationListResp)
+}
+
+//客户触达
+type (
+	NoticeManageAddReq  {}
+	NoticeManageAddResp  {}
+	NoticeManageModifyReq  {}
+	NoticeManageModifyResp  {}
+	NoticeManageStopReq  {}
+	NoticeManageStopResp  {}
+	NoticeManageDeleteReq  {}
+	NoticeManageDeleteResp  {}
+	NoticeManageInfoReq  {}
+	NoticeManageInfoResp  {}
+	NoticeManageListReq  {}
+	NoticeManageListResp  {}
+	NoticeManageenrollmentsituationReq  {}
+	NoticeManageEnrollmentSituationResp  {}
+)
+
+@server (
+	prefix: /v1
+	group:  noticemanage
+)
+service edumaster-api {
+	//添加触达设置
+	@handler Add
+	post /NoticeManage/add (NoticeManageAddReq) returns (NoticeManageAddResp)
+
+	//修改触达设置
+	@handler Modify
+	post /NoticeManage/modify (NoticeManageModifyReq) returns (NoticeManageModifyResp)
+
+	//停用触达设置
+	@handler Stop
+	post /NoticeManage/stop (NoticeManageStopReq) returns (NoticeManageStopResp)
+
+	//删除触达设置
+	@handler Delete
+	post /NoticeManage/delete (NoticeManageDeleteReq) returns (NoticeManageDeleteResp)
+
+	//查询触达设置
+	@handler Info
+	post /NoticeManage/info (NoticeManageInfoReq) returns (NoticeManageInfoResp)
+
+	//触达设置列表
+	@handler List
+	post /NoticeManage/list (NoticeManageListReq) returns (NoticeManageListResp)
+}
+
+//财务管理
+//订单列表
+type (
+	OrderListReq  {}
+	OrderListResp  {}
+)
+
+@server (
+	prefix: /v1
+	group:  order
+)
+service edumaster-api {
+	@handler list
+	post /order/list (OrderListReq) returns (OrderListResp)
+}
+
+//收支明细
+type (
+	SalarySettlementReq  {}
+	SalarySettlementResp  {}
+)
+
+@server (
+	prefix: /v1
+	group:  financial
+)
+service edumaster-api {
+	@handler salarysettlement
+	post /financial/salary/settlement (SalarySettlementReq) returns (SalarySettlementResp)
+}
+
+//统计分析
+//权限管理

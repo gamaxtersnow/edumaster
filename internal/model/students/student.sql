@@ -1,0 +1,21 @@
+CREATE TABLE student (
+                         id INT NOT NULL AUTO_INCREMENT,
+                         name VARCHAR(100) NOT NULL  DEFAULT '' COMMENT '姓名',
+                         gender tinyint NOT NULL  DEFAULT 1 COMMENT '性别 1 男 2 女',
+                         date_of_birth BIGINT NOT NULL  DEFAULT 0 COMMENT '出生日期（Unix时间戳）',
+                         city VARCHAR(100) NOT NULL DEFAULT '' COMMENT '所在城市',
+                         phone_number VARCHAR(20) NOT NULL DEFAULT '' COMMENT '手机号',
+                         major VARCHAR(100) NOT NULL DEFAULT '' COMMENT '专业',
+                         wechat_id VARCHAR(100) NOT NULL DEFAULT '' COMMENT '微信号',
+                         wechat_nickname VARCHAR(100) NOT NULL DEFAULT '' COMMENT '微信昵称',
+                         school VARCHAR(100) NOT NULL DEFAULT '' COMMENT '学校',
+                         grade VARCHAR(50) NOT NULL DEFAULT '' COMMENT '年级',
+                         student_type tinyint NOT NULL DEFAULT '1' COMMENT '学生属性 1 新生 2 老生)',
+                         notes VARCHAR(255) NOT NULL DEFAULT "" COMMENT '备注',
+                         account_type  tinyint NOT NULL DEFAULT '1' COMMENT '账号类型 1 非VIP 2 VIP',
+                         login_password VARCHAR(255) NOT NULL default '' COMMENT '登录密码',
+                         subscription VARCHAR(100) NOT NULL DEFAULT '' COMMENT '套餐选择',
+                         created_at INT NOT NULL DEFAULT 0 COMMENT '创建时间（Unix时间戳）',
+                         updated_at INT NOT NULL DEFAULT 0 COMMENT '更新时间（Unix时间戳）',
+                         primary key(id)
+) COMMENT '学生信息表';
