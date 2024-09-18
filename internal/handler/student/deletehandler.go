@@ -2,7 +2,6 @@ package student
 
 import (
 	"fmt"
-	"github.com/go-playground/validator/v10"
 	"net/http"
 	"strings"
 
@@ -10,6 +9,8 @@ import (
 	"edumaster/internal/svc"
 	"edumaster/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
+
+	"github.com/go-playground/validator/v10"
 )
 
 func DeleteHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {

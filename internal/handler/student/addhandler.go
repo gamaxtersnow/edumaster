@@ -1,14 +1,16 @@
 package student
 
 import (
+	"fmt"
+	"net/http"
+	"strings"
+
 	"edumaster/internal/logic/student"
 	"edumaster/internal/svc"
 	"edumaster/internal/types"
-	"fmt"
-	"github.com/go-playground/validator/v10"
 	"github.com/zeromicro/go-zero/rest/httpx"
-	"net/http"
-	"strings"
+
+	"github.com/go-playground/validator/v10"
 )
 
 func AddHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
@@ -18,6 +20,7 @@ func AddHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
+
 		if err := svcCtx.Validate.Struct(req); err != nil {
 			var translatedErrors []string
 			for _, e := range err.(validator.ValidationErrors) {

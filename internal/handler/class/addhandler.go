@@ -2,13 +2,15 @@ package class
 
 import (
 	"fmt"
-	"github.com/go-playground/validator/v10"
 	"net/http"
+	"strings"
 
 	"edumaster/internal/logic/class"
 	"edumaster/internal/svc"
 	"edumaster/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
+
+	"github.com/go-playground/validator/v10"
 )
 
 func AddHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
@@ -20,17 +22,18 @@ func AddHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		}
 
 		if err := svcCtx.Validate.Struct(req); err != nil {
-			if err != nil {
-				var validationErrors []types.ValidationError
-				for _, err := range err.(validator.ValidationErrors) {
-					validationErrors = append(validationErrors, types.ValidationError{
-						Field:   err.Field(),
-						Message: err.Translate(svcCtx.Trans),
-					})
+			var translatedErrors []string
+			for _, e := range err.(validator.ValidationErrors) {
+				ns := e.Namespace()
+				if ns != "" {
+					firstDotIndex := strings.Index(ns, ".")
+					if firstDotIndex != -1 {
+						ns = ns[firstDotIndex+1:]
+					}
 				}
-				err = fmt.Errorf("验证错误: %v", validationErrors)
+				translatedErrors = append(translatedErrors, fmt.Sprintf("%s:%s", ns, strings.TrimLeft(e.Translate(svcCtx.Trans), e.Field())))
 			}
-			httpx.ErrorCtx(r.Context(), w, err)
+			httpx.Error(w, fmt.Errorf("%v", translatedErrors))
 			return
 		}
 
