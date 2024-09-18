@@ -9,11 +9,11 @@ JwtAuth:
 Mysql:
   DataSource: root:123456@tcp(127.0.0.1:3306)/edumaster
 Cache:
-  - Host: 127.0.0.1:3306
+  - Host: 127.0.0.1:6379
     Pass:
 QWApiConf:
-  CorpId:
-  Secret:
+  CorpId: 企微corpId
+  Secret: 企微secret
   BaseUrl: https://qyapi.weixin.qq.com/cgi-bin
   Api:
     get_access_token:
