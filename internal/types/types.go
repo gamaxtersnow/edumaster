@@ -147,11 +147,11 @@ type ClassStopResp struct {
 }
 
 type Contact struct {
-	PhoneNumber  string `json:"phone_number"` // 联系人手机号
-	Type         int64  `json:"type"`         // 联系人类型
-	Relationship string `json:"relationship"` // 与学生的关系
-	Name         string `json:"name"`         // 联系人姓名
-	WechatId     string `json:"wechat_id"`    // 联系人微信号
+	PhoneNumber  string `json:"phone_number,optional"`                                // 联系人手机号
+	Type         int64  `json:"type" validate:"required,max=10" required:"联系人类型不能为空"` // 联系人类型
+	Relationship string `json:"relationship,optional"`                                // 与学生的关系
+	Name         string `json:"name,optional"`                                        // 联系人姓名
+	WechatId     string `json:"wechat_id,optional"`                                   // 联系人微信号
 }
 
 type CourseAddReq struct {
@@ -319,10 +319,10 @@ type CustomerStopResp struct {
 }
 
 type LearningGoal struct {
-	TargetScore   float64 `json:"target_score"`   // 目标分数
-	EntryScore    float64 `json:"entry_score"`    // 入学分数
-	TargetCourse  string  `json:"target_course"`  // 咨询课程
-	TargetCountry string  `json:"target_country"` // 目标国家
+	TargetScore   float64 `json:"target_score,optional"`   // 目标分数
+	EntryScore    float64 `json:"entry_score,optional"`    // 入学分数
+	TargetCourse  string  `json:"target_course,optional"`  // 咨询课程
+	TargetCountry string  `json:"target_country,optional"` // 目标国家
 }
 
 type NoticeManageAddReq struct {
@@ -374,10 +374,32 @@ type OrderListResp struct {
 }
 
 type ParentAccount struct {
-	Name          string `json:"name"`           // 家长姓名
-	Relationship  string `json:"relationship"`   // 与学生的关系
-	PhoneNumber   string `json:"phone_number"`   // 家长手机号
-	LoginPassword string `json:"login_password"` // 家长登录密码
+	Name          string `json:"name,optional"`           // 家长姓名
+	Relationship  string `json:"relationship,optional"`   // 与学生的关系
+	PhoneNumber   string `json:"phone_number,optional"`   // 家长手机号
+	LoginPassword string `json:"login_password,optional"` // 家长登录密码
+}
+
+type QwTokenResp struct {
+	ErrCode     int64  `json:"errcode"`
+	ErrMsg      string `json:"errmsg"`
+	AccessToken string `json:"access_token"`
+	ExpiresIn   int64  `json:"expires_in"`
+}
+
+type QwUserIdByEmailReq struct {
+	Email     string `json:"email"`
+	EmailType int64  `json:"email_type"`
+}
+
+type QwUserIdByMobileReq struct {
+	Mobile string `json:"mobile"`
+}
+
+type QwUserIdResp struct {
+	ErrCode int64  `json:"errcode"`
+	Errmsg  string `json:"errmsg"`
+	Userid  string `json:"userid"`
 }
 
 type SalarySettlementReq struct {
@@ -387,26 +409,26 @@ type SalarySettlementResp struct {
 }
 
 type StudentAddReq struct {
-	Name           string          `json:"name"`            // 姓名
-	Gender         int64           `json:"gender"`          // 性别（男/女）
-	DateOfBirth    int64           `json:"date_of_birth"`   // 出生日期（Unix时间戳）
-	City           string          `json:"city"`            // 所在城市
-	PhoneNumber    string          `json:"phone_number"`    // 手机号
-	Major          string          `json:"major"`           // 专业
-	WechatId       string          `json:"wechat_id"`       // 微信号
-	WechatNickname string          `json:"wechat_nickname"` // 微信昵称
-	School         string          `json:"school"`          // 学校
-	Grade          string          `json:"grade"`           // 年级
-	Contacts       []Contact       `json:"contacts"`        // 主要联系人信息
-	StudentType    int64           `json:"student_type"`    // 学生属性（新生/老生）
-	LearningGoals  []LearningGoal  `json:"learning_goals"`  // 学生目标列表
-	Notes          string          `json:"notes"`           // 备注
-	AccountType    int64           `json:"account_type"`    // 账号类型（VIP/非VIP）
-	LoginPassword  string          `json:"login_password"`  // 登录密码
-	Subscription   string          `json:"subscription"`    // 套餐选择（例如："12个月/剩余数量: 10"）
-	ParentAccounts []ParentAccount `json:"parent_accounts"` // 家长账号信息
-	CreatedAt      int64           `json:"created_at"`      // 创建时间（Unix时间戳）
-	UpdatedAt      int64           `json:"updated_at"`      // 更新时间（Unix时间戳）
+	Name           string          `json:"name" validate:"required,email"`               // 姓名
+	Gender         int64           `json:"gender"`                                       // 性别（男/女）
+	DateOfBirth    int64           `json:"date_of_birth,optional"`                       // 出生日期（Unix时间戳）
+	City           string          `json:"city" validate:"required" required:"所在城市不能为空"` // 所在城市
+	PhoneNumber    string          `json:"phone_number,optional"`                        // 手机号
+	Major          string          `json:"major,optional"`                               // 专业
+	WechatId       string          `json:"wechat_id,optional"`                           // 微信号
+	WechatNickname string          `json:"wechat_nickname,optional"`                     // 微信昵称
+	School         string          `json:"school,optional"`                              // 学校
+	Grade          string          `json:"grade,optional"`                               // 年级
+	Contacts       []Contact       `json:"contacts,optional" validate:"dive"`            // 主要联系人信息
+	StudentType    int64           `json:"student_type,optional"`                        // 学生属性（新生/老生）
+	LearningGoals  []LearningGoal  `json:"learning_goals,optional"`                      // 学生目标列表
+	Notes          string          `json:"notes,optional"`                               // 备注
+	AccountType    int64           `json:"account_type,optional"`                        // 账号类型（VIP/非VIP）
+	LoginPassword  string          `json:"login_password,optional"`                      // 登录密码
+	Subscription   string          `json:"subscription,optional"`                        // 套餐选择（例如："12个月/剩余数量: 10"）
+	ParentAccounts []ParentAccount `json:"parent_accounts,optional"`                     // 家长账号信息
+	CreatedAt      int64           `json:"created_at,optional"`                          // 创建时间（Unix时间戳）
+	UpdatedAt      int64           `json:"updated_at,optional"`                          // 更新时间（Unix时间戳）
 }
 
 type StudentAddResp struct {
@@ -596,6 +618,11 @@ type TimeScheduleStopReq struct {
 }
 
 type TimeScheduleStopResp struct {
+}
+
+type ValidationError struct {
+	Field   string `json:"field"`
+	Message string `json:"message"`
 }
 
 type LeaveapplicationListReq struct {

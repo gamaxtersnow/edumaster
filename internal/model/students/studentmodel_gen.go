@@ -21,7 +21,8 @@ var (
 	studentRowsExpectAutoSet   = strings.Join(stringx.Remove(studentFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
 	studentRowsWithPlaceHolder = strings.Join(stringx.Remove(studentFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 
-	cacheStudentIdPrefix = "cache:student:id:"
+	cacheStudentIdPrefix          = "cache:student:id:"
+	cacheStudentPhoneNumberPrefix = "cache:student:phoneNumber:"
 )
 
 type (
@@ -30,6 +31,7 @@ type (
 		TransInsertCtx(ctx context.Context, session sqlx.Session, data *Student) (sql.Result, error)
 
 		FindOne(ctx context.Context, id int64) (*Student, error)
+		FindOneByPhoneNumber(ctx context.Context, phoneNumber string) (*Student, error)
 		Update(ctx context.Context, data *Student) error
 		Delete(ctx context.Context, id int64) error
 		TransCtx(ctx context.Context, fn func(session sqlx.Session) error) error
@@ -70,11 +72,17 @@ func newStudentModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option)
 }
 
 func (m *defaultStudentModel) Delete(ctx context.Context, id int64) error {
+	data, err := m.FindOne(ctx, id)
+	if err != nil {
+		return err
+	}
+
 	studentIdKey := fmt.Sprintf("%s%v", cacheStudentIdPrefix, id)
-	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+	studentPhoneNumberKey := fmt.Sprintf("%s%v", cacheStudentPhoneNumberPrefix, data.PhoneNumber)
+	_, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
 		return conn.ExecCtx(ctx, query, id)
-	}, studentIdKey)
+	}, studentIdKey, studentPhoneNumberKey)
 	return err
 }
 
@@ -106,12 +114,33 @@ func (m *defaultStudentModel) FindOne(ctx context.Context, id int64) (*Student, 
 	}
 }
 
+func (m *defaultStudentModel) FindOneByPhoneNumber(ctx context.Context, phoneNumber string) (*Student, error) {
+	studentPhoneNumberKey := fmt.Sprintf("%s%v", cacheStudentPhoneNumberPrefix, phoneNumber)
+	var resp Student
+	err := m.QueryRowIndexCtx(ctx, &resp, studentPhoneNumberKey, m.formatPrimary, func(ctx context.Context, conn sqlx.SqlConn, v any) (i any, e error) {
+		query := fmt.Sprintf("select %s from %s where `phone_number` = ? limit 1", studentRows, m.table)
+		if err := conn.QueryRowCtx(ctx, &resp, query, phoneNumber); err != nil {
+			return nil, err
+		}
+		return resp.Id, nil
+	}, m.queryPrimary)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
 func (m *defaultStudentModel) Insert(ctx context.Context, data *Student) (sql.Result, error) {
 	studentIdKey := fmt.Sprintf("%s%v", cacheStudentIdPrefix, data.Id)
+	studentPhoneNumberKey := fmt.Sprintf("%s%v", cacheStudentPhoneNumberPrefix, data.PhoneNumber)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, studentRowsExpectAutoSet)
 		return conn.ExecCtx(ctx, query, data.Name, data.Gender, data.DateOfBirth, data.City, data.PhoneNumber, data.Major, data.WechatId, data.WechatNickname, data.School, data.Grade, data.StudentType, data.Notes, data.AccountType, data.LoginPassword, data.Subscription)
-	}, studentIdKey)
+	}, studentIdKey, studentPhoneNumberKey)
 	return ret, err
 }
 
@@ -120,12 +149,18 @@ func (m *defaultStudentModel) TransInsertCtx(ctx context.Context, session sqlx.S
 	return session.ExecCtx(ctx, query, data.Name, data.Gender, data.DateOfBirth, data.City, data.PhoneNumber, data.Major, data.WechatId, data.WechatNickname, data.School, data.Grade, data.StudentType, data.Notes, data.AccountType, data.LoginPassword, data.Subscription)
 }
 
-func (m *defaultStudentModel) Update(ctx context.Context, data *Student) error {
+func (m *defaultStudentModel) Update(ctx context.Context, newData *Student) error {
+	data, err := m.FindOne(ctx, newData.Id)
+	if err != nil {
+		return err
+	}
+
 	studentIdKey := fmt.Sprintf("%s%v", cacheStudentIdPrefix, data.Id)
-	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+	studentPhoneNumberKey := fmt.Sprintf("%s%v", cacheStudentPhoneNumberPrefix, data.PhoneNumber)
+	_, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, studentRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, data.Name, data.Gender, data.DateOfBirth, data.City, data.PhoneNumber, data.Major, data.WechatId, data.WechatNickname, data.School, data.Grade, data.StudentType, data.Notes, data.AccountType, data.LoginPassword, data.Subscription, data.Id)
-	}, studentIdKey)
+		return conn.ExecCtx(ctx, query, newData.Name, newData.Gender, newData.DateOfBirth, newData.City, newData.PhoneNumber, newData.Major, newData.WechatId, newData.WechatNickname, newData.School, newData.Grade, newData.StudentType, newData.Notes, newData.AccountType, newData.LoginPassword, newData.Subscription, newData.Id)
+	}, studentIdKey, studentPhoneNumberKey)
 	return err
 }
 

@@ -1,8 +1,8 @@
 package qiwei
 
 import (
-	"beisen/internal/config"
-	"beisen/internal/types"
+	"edumaster/internal/config"
+	"edumaster/internal/types"
 	"encoding/json"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/cache"

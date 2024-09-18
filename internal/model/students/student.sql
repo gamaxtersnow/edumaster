@@ -17,5 +17,6 @@ CREATE TABLE student (
                          subscription VARCHAR(100) NOT NULL DEFAULT '' COMMENT '套餐选择',
                          created_at INT NOT NULL DEFAULT 0 COMMENT '创建时间（Unix时间戳）',
                          updated_at INT NOT NULL DEFAULT 0 COMMENT '更新时间（Unix时间戳）',
-                         primary key(id)
+                         primary key(id),
+                         constraint uk_phone_number unique (phone_number)
 ) COMMENT '学生信息表';
