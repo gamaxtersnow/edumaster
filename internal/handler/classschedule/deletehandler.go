@@ -10,6 +10,7 @@ import (
 	"edumaster/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 
+	"edumaster/internal/response"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -17,7 +18,7 @@ func DeleteHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.ClassScheduleDeleteReq
 		if err := httpx.Parse(r, &req); err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
+			response.ParseErrorResponse(w, err)
 			return
 		}
 
@@ -33,7 +34,8 @@ func DeleteHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 				}
 				translatedErrors = append(translatedErrors, fmt.Sprintf("%s:%s", ns, strings.TrimLeft(e.Translate(svcCtx.Trans), e.Field())))
 			}
-			httpx.Error(w, fmt.Errorf("%v", translatedErrors))
+
+			response.ValidateErrorResponse(w, translatedErrors)
 			return
 		}
 

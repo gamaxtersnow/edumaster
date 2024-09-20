@@ -2,7 +2,7 @@ syntax = "v1"
 
 type (
 	StudentAddReq {
-		Name           string `json:"name" validate:"required,email"` // 姓名
+		Name           string `json:"name" validate:"required"` // 姓名
 		Gender         int64  `json:"gender"` // 性别（男/女）
 		DateOfBirth    int64  `json:"date_of_birth,optional"` // 出生日期（Unix时间戳）
 		City           string `json:"city" validate:"required" required:"所在城市不能为空"` // 所在城市
@@ -857,5 +857,14 @@ type QwUserIdResp {
 type ValidationError {
 	Field   string `json:"field"`
 	Message string `json:"message"`
+}
+
+type ErrorInfo {
+	ErrorCode int64  `json:"errno"`
+	ErrorMsg  string `json:"error"`
+}
+
+type ErrorResponse {
+	ErrorInfo ErrorInfo `json:"error_info"`
 }
 

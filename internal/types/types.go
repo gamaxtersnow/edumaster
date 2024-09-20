@@ -318,6 +318,15 @@ type CustomerStopReq struct {
 type CustomerStopResp struct {
 }
 
+type ErrorInfo struct {
+	ErrorCode int64  `json:"errno"`
+	ErrorMsg  string `json:"error"`
+}
+
+type ErrorResponse struct {
+	ErrorInfo ErrorInfo `json:"error_info"`
+}
+
 type LearningGoal struct {
 	TargetScore   float64 `json:"target_score,optional"`   // 目标分数
 	EntryScore    float64 `json:"entry_score,optional"`    // 入学分数
@@ -409,7 +418,7 @@ type SalarySettlementResp struct {
 }
 
 type StudentAddReq struct {
-	Name           string          `json:"name" validate:"required,email"`               // 姓名
+	Name           string          `json:"name" validate:"required"`                     // 姓名
 	Gender         int64           `json:"gender"`                                       // 性别（男/女）
 	DateOfBirth    int64           `json:"date_of_birth,optional"`                       // 出生日期（Unix时间戳）
 	City           string          `json:"city" validate:"required" required:"所在城市不能为空"` // 所在城市
